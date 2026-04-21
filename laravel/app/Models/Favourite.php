@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['service_id', 'user_id'])]
 class Favourite extends Model
 {
-    //
+    protected $fillable = [
+        'user_id',
+        'service_id',
+    ];
+
+    public $timestamps = false;
 }

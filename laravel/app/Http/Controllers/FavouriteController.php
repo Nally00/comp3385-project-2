@@ -3,23 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\Favourite;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Service;
+use Illuminate\Http\Request;
 
 class FavouriteController extends Controller
 {
     public function store($service_id)
     {
-        $user = Auth::user();
+        $userId = auth('api')->id();
 
-        if (! $user) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+        if (! $userId) {
+            return response()->json([
+                'message' => 'Unauthenticated.'
+            ], 401);
         }
 
-        $favourite = Favourite::create([
-            'service_id' => $service_id,
-            'user_id' => $user->id,
+        $service = Service::findOrFail($service_id);
+
+        $favourite = Favourite::firstOrCreate([
+            'user_id' => $userId,
+            'service_id' => $service->id,
         ]);
 
-        return response()->json($favourite, 201);
+        return response()->json([
+            'message' => 'Service added to favourites.',
+            'favourite' => $favourite,
+        ]);
     }
 }
