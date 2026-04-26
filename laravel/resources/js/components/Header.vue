@@ -41,10 +41,10 @@
         <template v-else>
           <div class="flex items-center gap-3">
             <img
-                v-if="photoUrl"
-                :src="photoUrl"
-                alt="User photo"
-                class="w-9 h-9 rounded-full object-cover border border-slate-200"
+              v-if="photoUrl"
+              :src="photoUrl"
+              alt="User photo"
+              class="w-9 h-9 rounded-full object-cover border border-slate-200"
             />
 
             <div
@@ -58,26 +58,18 @@
               Hi, {{ userName }}
             </span>
 
-
             <router-link
               to="/logout"
               class="px-4 py-2 text-sm border border-sky-500 text-sky-600 rounded-md hover:bg-sky-50"
             >
               Logout
             </router-link>
-
           </div>
         </template>
       </div>
     </div>
   </header>
 </template>
-
-
-
-
-
-
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
@@ -109,13 +101,14 @@ const userInitial = computed(() => {
 const photoUrl = computed(() => {
   if (!userPhoto.value) return ''
 
-  
   if (userPhoto.value.startsWith('http')) {
     return userPhoto.value
   }
 
+  if (userPhoto.value.startsWith('demo/')) {
+    return `/${userPhoto.value}`
+  }
 
   return `/storage/${userPhoto.value}`
 })
-
 </script>

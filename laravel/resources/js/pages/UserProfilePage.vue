@@ -1,7 +1,14 @@
 <template>
   <div>
+    <p v-if="loading" class="max-w-7xl mx-auto px-4 py-8 text-slate-500">
+      Loading profile...
+    </p>
+
+    <p v-if="errorMessage" class="max-w-7xl mx-auto px-4 py-8 text-red-600">
+      {{ errorMessage }}
+    </p>
+
     <div v-if="user">
-    
       <!-- User Details Section -->
       <section class="bg-gradient-to-r from-slate-950 to-sky-900 text-white">
         <div class="max-w-7xl mx-auto px-4 py-14">
@@ -26,7 +33,7 @@
               <h1 class="text-5xl font-bold mb-3">{{ user.name }}</h1>
 
               <p class="text-slate-300 text-lg mb-4">
-                 {{ user.location || 'Location not provided' }}
+                {{ user.location || 'Location not provided' }}
                 <span class="mx-2">·</span>
                 Member since {{ memberSince }}
               </p>
@@ -51,7 +58,7 @@
         </div>
       </section>
 
-      <!-- User's Services Section-->
+      <!-- User's Services Section -->
       <section class="max-w-7xl mx-auto px-4 py-12">
         <div class="mb-6">
           <h2 class="text-3xl font-bold text-slate-900">{{ user.name }}'s Services</h2>
@@ -62,6 +69,7 @@
             v-for="service in userServices"
             :key="service.id"
             :service="service"
+            :is-favourited="favouriteIds.includes(service.id)"
           />
         </div>
 
@@ -79,6 +87,7 @@
             v-for="service in favouriteServices"
             :key="service.id"
             :service="service"
+            :is-favourited="true"
           />
         </div>
 
@@ -87,12 +96,6 @@
     </div>
   </div>
 </template>
-
-
-
-
-
-
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
@@ -104,6 +107,7 @@ const route = useRoute()
 const user = ref(null)
 const userServices = ref([])
 const favouriteServices = ref([])
+const favouriteIds = ref([])
 const loading = ref(true)
 const errorMessage = ref('')
 
@@ -143,6 +147,7 @@ const fetchProfile = async () => {
 
     if (favouritesResponse.ok) {
       favouriteServices.value = Array.isArray(favouritesData) ? favouritesData : []
+      favouriteIds.value = favouriteServices.value.map((service) => service.id)
     }
   } catch (error) {
     errorMessage.value = 'Something went wrong.'
@@ -156,6 +161,10 @@ const photoUrl = computed(() => {
 
   if (user.value.photo.startsWith('http')) {
     return user.value.photo
+  }
+
+  if (user.value.photo.startsWith('demo/')) {
+    return `/${user.value.photo}`
   }
 
   return `/storage/${user.value.photo}`

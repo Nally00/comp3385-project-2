@@ -204,6 +204,8 @@ const handleFavourite = async () => {
   }
 }
 
+
+
 const imageUrl = computed(() => {
   if (!service.value?.photo) {
     return 'https://via.placeholder.com/900x500?text=Service+Image'
@@ -211,6 +213,10 @@ const imageUrl = computed(() => {
 
   if (service.value.photo.startsWith('http')) {
     return service.value.photo
+  }
+
+  if (service.value.photo.startsWith('demo/')) {
+    return `/${service.value.photo}`
   }
 
   return `/storage/${service.value.photo}`
@@ -223,6 +229,10 @@ const providerPhotoUrl = computed(() => {
 
   if (service.value.user.photo.startsWith('http')) {
     return service.value.user.photo
+  }
+
+  if (service.value.user.photo.startsWith('demo/')) {
+    return `/${service.value.user.photo}`
   }
 
   return `/storage/${service.value.user.photo}`

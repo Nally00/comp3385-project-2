@@ -82,6 +82,10 @@ const imageUrl = computed(() => {
     return props.service.photo
   }
 
+  if (props.service.photo.startsWith('demo/')) {
+    return `/${props.service.photo}`
+  }
+
   return `/storage/${props.service.photo}`
 })
 
